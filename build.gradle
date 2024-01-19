@@ -17,3 +17,8 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+javadoc {
+    destinationDir = file("${buildDir}/docs/javadoc")
+    include 'edu/sakralen/task1/map/**'
+}
