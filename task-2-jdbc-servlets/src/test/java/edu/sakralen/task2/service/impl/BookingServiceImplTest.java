@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookingServiceImplTest extends DatabaseTestExtension {
@@ -58,26 +58,53 @@ class BookingServiceImplTest extends DatabaseTestExtension {
 
     @Test
     void givenNotPresentCustomer_whenBooked_thenReturnedNull() {
+        Long sessionId = 1L;
+        Long customerId = 1L;
 
+        BookingDto dto = new BookingDto(sessionId, customerId);
+
+        Mockito.when(sessionRepository.findById(sessionId)).thenReturn(null);
+
+        assertNull(bookingService.bookSession(dto));
     }
 
     @Test
     void givenNotPresentSession_whenBooked_thenReturnedNull() {
+        Long sessionId = 1L;
+        Long customerId = 1L;
 
+        BookingDto dto = new BookingDto(sessionId, customerId);
+
+        Session session = new Session();
+        session.setId(sessionId);
+
+        Mockito.when(sessionRepository.findById(sessionId)).thenReturn(session);
+        Mockito.when(customerRepository.findById(customerId)).thenReturn(null);
+
+        assertNull(bookingService.bookSession(dto));
     }
 
     @Test
     void givenCorrectDto_whenUnbooked_thenReturnsTrue() {
+        Long sessionId = 1L;
+        Long customerId = 1L;
 
+        BookingDto dto = new BookingDto(sessionId, customerId);
+
+        Mockito.when(sessionCustomerRepository.deleteBySessionAndCustomerIds(sessionId, customerId)).thenReturn(true);
+
+        assertTrue(bookingService.unbookSession(dto));
     }
 
     @Test
     void givenNotPresentSession_whenUnbooked_thenReturnsFalse() {
+        Long sessionId = 1L;
+        Long customerId = 1L;
 
-    }
+        BookingDto dto = new BookingDto(sessionId, customerId);
 
-    @Test
-    void givenNotPresentCustomer_whenUnbooked_thenReturnsFalse() {
+        Mockito.when(sessionCustomerRepository.deleteBySessionAndCustomerIds(sessionId, customerId)).thenReturn(false);
 
+        assertFalse(bookingService.unbookSession(dto));
     }
 }
