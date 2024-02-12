@@ -197,7 +197,7 @@ public class CustomerServlet extends HttpServlet {
     }
 
     private void doGetFindAll(HttpServletResponse resp) throws IOException {
-        resp.setStatus(HttpServletResponse.SC_FOUND);
+        resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("text/plain");
         resp.getWriter().write(customerService.findAll().toString());
     }
@@ -215,7 +215,7 @@ public class CustomerServlet extends HttpServlet {
             return;
         }
 
-        resp.setStatus(HttpServletResponse.SC_FOUND);
+        resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("text/plain");
         resp.getWriter().write(foundCustomer.toString());
     }
@@ -233,7 +233,7 @@ public class CustomerServlet extends HttpServlet {
             return;
         }
 
-        resp.setStatus(HttpServletResponse.SC_FOUND);
+        resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("text/plain");
         resp.getWriter().write(customerSessions.toString());
     }

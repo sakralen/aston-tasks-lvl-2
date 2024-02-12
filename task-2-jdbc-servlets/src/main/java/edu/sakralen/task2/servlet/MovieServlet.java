@@ -44,7 +44,7 @@ public class MovieServlet extends HttpServlet {
     }
 
     private void doGetFindAll(HttpServletResponse resp) throws IOException {
-        resp.setStatus(HttpServletResponse.SC_FOUND);
+        resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("text/plain");
         resp.getWriter().write(movieService.findAll().toString());
     }
@@ -66,7 +66,7 @@ public class MovieServlet extends HttpServlet {
             return;
         }
 
-        resp.setStatus(HttpServletResponse.SC_FOUND);
+        resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("text/plain");
         resp.getWriter().write(foundMovie.toString());
     }

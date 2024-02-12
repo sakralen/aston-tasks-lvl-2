@@ -17,7 +17,6 @@ import java.io.IOException;
 
 @WebServlet("/sessions/*")
 public class SessionServlet extends HttpServlet {
-
     private final BookingService<Long> bookingService;
     private final SessionService<Long> sessionService;
 
@@ -49,28 +48,10 @@ public class SessionServlet extends HttpServlet {
 
         if (urlTokens.length == 1) {
             doGetFindById(urlTokens, resp);
+            return;
         }
 
         doGetCountCustomers(urlTokens, resp);
-    }
-
-    private void doGetCountCustomers(String[] urlTokens, HttpServletResponse resp) throws IOException {
-        Long sessionId = PathInfoUtils.parseId(urlTokens[0]);
-        if (sessionId == null) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-
-        Long customersCount = sessionService.getCustomersCountAtSession(sessionId);
-        if (customersCount == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
-        resp.setStatus(HttpServletResponse.SC_FOUND);
-        resp.setContentType("text/plain");
-        resp.getWriter().write(customersCount.toString());
     }
 
     @Override
@@ -157,8 +138,26 @@ public class SessionServlet extends HttpServlet {
         return isCustomerIdValid && urlTokens[1].equals("customers") && isSessionIdValid;
     }
 
+    private void doGetCountCustomers(String[] urlTokens, HttpServletResponse resp) throws IOException {
+        Long sessionId = PathInfoUtils.parseId(urlTokens[0]);
+        if (sessionId == null) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        Long customersCount = sessionService.getCustomersCountAtSession(sessionId);
+        if (customersCount == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.setContentType("text/plain");
+        resp.getWriter().write(customersCount.toString());
+    }
+
     private void doGetFindAll(HttpServletResponse resp) throws IOException {
-        resp.setStatus(HttpServletResponse.SC_FOUND);
+        resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("text/plain");
         resp.getWriter().write(sessionService.findAll().toString());
     }
@@ -176,7 +175,7 @@ public class SessionServlet extends HttpServlet {
             return;
         }
 
-        resp.setStatus(HttpServletResponse.SC_FOUND);
+        resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("text/plain");
         resp.getWriter().write(foundSession.toString());
     }
